@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,14 +36,27 @@ public class LoginControl extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String user = request.getParameter("txtuser");
         String pass = request.getParameter("txtpass");
-        
+        Boolean remember = Boolean.parseBoolean(request.getParameter("remember"));
         Account a = DAO.getLogin(user, pass);
-        
-        if (a==null) {
+        boolean result = true;
+        if (a == null) {
             request.setAttribute("mess", "Đăng nhập thất bại");
             request.getRequestDispatcher("Login.jsp").forward(request, response);
         } else {
-            response.sendRedirect("HomeControl");
+            request.setAttribute("textr", result);
+
+            if (remember) {
+                Cookie uCookie = new Cookie("username", user);
+                uCookie.setMaxAge(24 * 60 * 60);
+                response.addCookie(uCookie);
+                Cookie pCookie = new Cookie("password", pass);
+                pCookie.setMaxAge(24 * 60 * 60);
+                response.addCookie(pCookie);
+            }
+
+            String nameuser = user;
+            request.setAttribute("nameuser", nameuser);
+            request.getRequestDispatcher("Home.jsp").forward(request, response);
         }
     }
 

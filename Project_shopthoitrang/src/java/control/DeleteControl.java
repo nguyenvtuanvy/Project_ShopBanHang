@@ -4,21 +4,22 @@
  */
 package control;
 
-import dao.DAO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import models.Account;
+import javax.servlet.http.HttpSession;
+import models.CartProduct;
 
 /**
  *
  * @author Admin
  */
-@WebServlet(name = "SignUpControl", urlPatterns = {"/SignUpControl"})
-public class SignUpControl extends HttpServlet {
+@WebServlet(name = "DeleteControl", urlPatterns = {"/DeleteControl"})
+public class DeleteControl extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,24 +33,12 @@ public class SignUpControl extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String user = request.getParameter("txtuser");
-        String pass = request.getParameter("txtpass");
-        String reppass = request.getParameter("txtreppass");
-        boolean result = true;
-        if (!pass.equals(reppass)) {
-            request.setAttribute("mess", "Mật Khẩu Nhập Lại Không Khớp");
-            request.getRequestDispatcher("SignUp.jsp").forward(request, response);
-        } else {
-            Account a = DAO.CheckUserSignUp(user);
-            if (a == null) {
-                DAO.signup(user, pass);
-                request.getRequestDispatcher("Login.jsp").forward(request, response);
-            } else {
-                request.setAttribute("mess", "Account đã tồn tại");
-                request.getRequestDispatcher("SignUp.jsp").forward(request, response);
-            }
-        }
-
+        String id = request.getParameter("txtxoa");
+        HttpSession session = request.getSession(true);
+        CartProduct cartP = (CartProduct) session.getAttribute("SHOP");
+        cartP.deleteProduct(id);
+        session.setAttribute("SHOP", cartP);
+        request.getRequestDispatcher("PayCart.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

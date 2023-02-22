@@ -6,11 +6,12 @@ package control;
 
 import dao.DAO;
 import java.io.IOException;
-
+import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +22,7 @@ import models.Product;
  *
  * @author Admin
  */
-
+@WebServlet(name = "HomeControl", urlPatterns = {"/HomeControl"})
 public class HomeControl extends HttpServlet {
 
     /**
@@ -38,11 +39,38 @@ public class HomeControl extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         List<Product> list = DAO.getAll();
         HttpSession session = request.getSession(true);
+        Cookie[] cookies = request.getCookies();
+        int dem = 0;
+        for (Cookie cooky : cookies) {
+            if (cooky.getName().equals("sosanpham")) {
+                dem = Integer.parseInt(cooky.getValue());
+            }
+        }
+        Cookie demCookie = new Cookie("sosanpham", String.valueOf(dem));
+        demCookie.setMaxAge(23 * 60 * 60);
+        response.addCookie(demCookie);
+        cookies = request.getCookies();
+        String nameuser = null;
+        boolean result = false;
+        for (Cookie cooky : cookies) {
+            if (cooky.getName().equals("username")) {
+                nameuser = cooky.getValue();
+            }
+            if (cooky.getName().equals("sosanpham")) {
+                dem = Integer.parseInt(cooky.getValue());
+            }
+        }
+        if (nameuser!=null) {
+            result = true;
+        }
+        request.setAttribute("sosanpham", dem);
+        request.setAttribute("textr", result);
+        request.setAttribute("nameuser", nameuser);
         session.setAttribute("listProd", list);
         RequestDispatcher rd = request.getRequestDispatcher("Home.jsp");
         rd.forward(request, response);
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

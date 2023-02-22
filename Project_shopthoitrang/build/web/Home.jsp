@@ -13,11 +13,12 @@
     </head>
 
     <body>
+
         <header class="section-header" >
             <section class="header-main border-bottom">
                 <div class="container">
                     <div class="row align-items-center">
-                        <div class="col-lg-2 col-4">Therichpost.com</div>
+                        <div class="col-lg-2 col-4"><img style="width: 60px;cursor: pointer" src="assets/imges/logo.jpg" alt="logo"/></div>
                         <div class="col-lg-6 col-sm-12">
                             <form action="SearchControl" class="search">
                                 <div class="input-group w-100">
@@ -35,20 +36,24 @@
                         <div class="col-lg-4 col-sm-6 col-12">
                             <div class="widgets-wrap float-md-end">
                                 <div class="widget-header me-3">
-                                    <a href="#" class="icon icon-sm rounded-circle border"><i
+                                    <a href="PayCart.jsp" class="icon icon-sm rounded-circle border"><i
                                             class="fa fa-shopping-cart"></i></a>
-                                    <span class="badge badge-pill badge-danger notify">0</span>
+                                    <span class="badge badge-pill badge-danger notify">${sosanpham}</span>
                                 </div>
                                 <div class="widget-header icontext">
                                     <a href="#" class="icon icon-sm rounded-circle border"><i
                                             class="fa fa-user"></i></a>
+                                    <!--<form action="LoginControl" method="post">-->
                                     <div class="text">
                                         <span class="text-muted">Welcome!</span>
                                         <div>
-                                            <a href="Login.jsp">Sign in</a> |
-                                            <a href="SignUp.jsp"> Register</a>
+                                            <c:choose>
+                                                <c:when test="${textr==true}"> <p>${nameuser}</p> </c:when>
+                                                <c:otherwise><a href = "Login.jsp" > Sign in </a > | <a href = "SignUp.jsp" > Register </a></c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </div>
+                                    <!--</form>-->
                                 </div>
                             </div>
                             <!-- widgets-wrap.// -->
@@ -169,13 +174,13 @@
                 </header>
                 <!-- sect-heading -->
 
-                <form action="HomeControl">
+                <form action="HomeControl" method="post">
                     <div class="row">
                         <c:forEach var="o" items="${listProd}">
                             <div class="col-md-3">
                                 <div href="DetailControl?pid=${o.id}" class="card card-product-grid">
                                     <a href="DetailControl?pid=${o.id}" class="img-wrap">
-                                        <img src="assets/imges/items/${o.image}" alt="ảnh"/>
+                                        <img src="assets/imges/items/${o.image}" alt="ảnh" />
                                     </a>
                                     <div class="info-wrap">
                                         <a href="DetailControl?pid=${o.id}" class="title">${o.name}</a>
@@ -212,88 +217,7 @@
         <!-- ========================= SECTION  END// ======================= -->
 
         <!-- ========================= FOOTER ========================= -->
-        <footer class="section-footer border-top bg">
-            <div class="container">
-                <section class="footer-top padding-y">
-                    <div class="row">
-                        <aside class="col-md col-6">
-                            <h6 class="title">Brands</h6>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Adidas</a></li>
-                                <li><a href="#">Puma</a></li>
-                                <li><a href="#">Reebok</a></li>
-                                <li><a href="#">Nike</a></li>
-                            </ul>
-                        </aside>
-                        <aside class="col-md col-6">
-                            <h6 class="title">Company</h6>
-                            <ul class="list-unstyled">
-                                <li><a href="#">About us</a></li>
-                                <li><a href="#">Career</a></li>
-                                <li><a href="#">Find a store</a></li>
-                                <li><a href="#">Rules and terms</a></li>
-                                <li><a href="#">Sitemap</a></li>
-                            </ul>
-                        </aside>
-                        <aside class="col-md col-6">
-                            <h6 class="title">Help</h6>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Contact us</a></li>
-                                <li><a href="#">Money refund</a></li>
-                                <li><a href="#">Order status</a></li>
-                                <li><a href="#">Shipping info</a></li>
-                                <li><a href="#">Open dispute</a></li>
-                            </ul>
-                        </aside>
-                        <aside class="col-md col-6">
-                            <h6 class="title">Account</h6>
-                            <ul class="list-unstyled">
-                                <li><a href="#"> User Login </a></li>
-                                <li><a href="#"> User register </a></li>
-                                <li><a href="#"> Account Setting </a></li>
-                                <li><a href="#"> My Orders </a></li>
-                            </ul>
-                        </aside>
-                        <aside class="col-md">
-                            <h6 class="title">Social</h6>
-                            <ul class="list-unstyled">
-                                <li>
-                                    <a href="#"> <i class="fab fa-facebook"></i> Facebook </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <i class="fab fa-twitter"></i> Twitter </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <i class="fab fa-instagram"></i> Instagram </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <i class="fab fa-youtube"></i> Youtube </a>
-                                </li>
-                            </ul>
-                        </aside>
-                    </div>
-                    <!-- row.// -->
-                </section>
-                <!-- footer-top.// -->
-
-                <section class="footer-bottom row">
-                    <div class="col-md-2">
-                        <p class="text-muted">2021 Company name</p>
-                    </div>
-                    <div class="col-md-8 text-md-center">
-                        <span class="px-2">info@com</span>
-                        <span class="px-2">+000-000-0000</span>
-                        <span class="px-2">Street name 123, ABC</span>
-                    </div>
-                    <div class="col-md-2 text-md-end text-muted">
-                        <i class="fab fa-lg fa-cc-visa"></i>
-                        <i class="fab fa-lg fa-cc-paypal"></i>
-                        <i class="fab fa-lg fa-cc-mastercard"></i>
-                    </div>
-                </section>
-            </div>
-            <!-- //container -->
-        </footer>
+        <jsp:include page="Footer.jsp"></jsp:include>
         <!-- ========================= FOOTER END // ========================= -->
     </body>
 

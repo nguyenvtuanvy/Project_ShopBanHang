@@ -6,19 +6,26 @@ package control;
 
 import dao.DAO;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import models.Account;
+import javax.servlet.http.HttpSession;
+import models.CartProduct;
+import models.Product;
+import models.ProductGH;
 
 /**
  *
  * @author Admin
  */
-@WebServlet(name = "SignUpControl", urlPatterns = {"/SignUpControl"})
-public class SignUpControl extends HttpServlet {
+@WebServlet(name = "PayControl", urlPatterns = {"/PayControl"})
+public class PayControl extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,24 +39,39 @@ public class SignUpControl extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String user = request.getParameter("txtuser");
-        String pass = request.getParameter("txtpass");
-        String reppass = request.getParameter("txtreppass");
+        HttpSession session = request.getSession(true);
+        String id = request.getParameter("txtid");
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        CartProduct cartP = (CartProduct) session.getAttribute("SHOP");
+        Product p = DAO.getProductbyId(id);
+        if (cartP == null) {
+            cartP = new CartProduct();
+        }
+        ProductGH pgh = new ProductGH(p, quantity);
+        cartP.addProduct(pgh);
         boolean result = true;
-        if (!pass.equals(reppass)) {
-            request.setAttribute("mess", "Mật Khẩu Nhập Lại Không Khớp");
-            request.getRequestDispatcher("SignUp.jsp").forward(request, response);
-        } else {
-            Account a = DAO.CheckUserSignUp(user);
-            if (a == null) {
-                DAO.signup(user, pass);
-                request.getRequestDispatcher("Login.jsp").forward(request, response);
-            } else {
-                request.setAttribute("mess", "Account đã tồn tại");
-                request.getRequestDispatcher("SignUp.jsp").forward(request, response);
+        String nameuser = null;
+        Cookie[] cookies = request.getCookies();
+        int dem = 0;
+        for (Cookie cooky : cookies) {
+            if (cooky.getName().equals("username")) {
+                nameuser = cooky.getValue();
+            }
+            if (cooky.getName().equals("sosanpham")) {
+                dem = Integer.parseInt(cooky.getValue());
             }
         }
-
+        if (p!=null) {
+            dem++;
+        }
+        Cookie demCookie = new Cookie("sosanpham", String.valueOf(dem));
+        demCookie.setMaxAge(23 * 60 * 60);
+        response.addCookie(demCookie);
+        request.setAttribute("sosanpham", dem);
+        request.setAttribute("textr", result);
+        request.setAttribute("nameuser", nameuser);
+        session.setAttribute("SHOP", cartP);
+        request.getRequestDispatcher("Detail.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

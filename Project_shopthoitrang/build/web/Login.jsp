@@ -40,22 +40,22 @@
                                         </p>
                                     </div>
                                 </div>
-                                <form action="LoginControl" class="signin-form">
+                                <form action="LoginControl" method="get" class="signin-form">
                                     <p class="text-danger" >${mess}</p>
                                     <div class="form-group mb-3">
                                         <label class="label" for="name">Username</label>
-                                        <input type="text" name="txtuser" class="form-control" placeholder="Username" required>
+                                        <input type="text" name="txtuser" value="" class="form-control" placeholder="Username" required>
                                     </div>
                                     <div class="form-group mb-3">
                                         <label class="label" for="password">Password</label>
-                                        <input type="password" name="txtpass" class="form-control" placeholder="Password" required>
+                                        <input type="password" name="txtpass" value="" class="form-control" placeholder="Password" required>
                                     </div>
                                     <div class="form-group">
                                         <button type="submit" class="form-control btn btn-primary rounded submit px-3">Sign In</button>
                                     </div>
                                     <div class="form-group d-md-flex">
                                         <div class="w-50 text-left">
-                                            <label class="checkbox-wrap checkbox-primary mb-0">Remember Me<input type="checkbox" checked>
+                                            <label class="checkbox-wrap checkbox-primary mb-0">Remember Me<input type="checkbox" name="remember" value="true" checked>
                                                 <span class="checkmark"></span>
                                             </label>
                                         </div>

@@ -7,14 +7,20 @@ package control;
 import dao.DAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.CartProduct;
 import models.Product;
+import models.ProductGH;
 
 /**
  *
@@ -35,12 +41,30 @@ public class DetailControl extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        
+        // chuyển trang detail
         String id = request.getParameter("pid");
+        boolean result = true;
         Product p = DAO.getProductbyId(id);
         HttpSession session = request.getSession(true);
         session.setAttribute("detail", p);
+        request.setAttribute("textr", result);
+        String nameuser = null;
+        int dem = 0;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cooky : cookies) {
+            if (cooky.getName().equals("username")) {
+                nameuser = cooky.getValue();
+            }
+            if (cooky.getName().equals("sosanpham")) {
+                dem = Integer.parseInt(cooky.getValue());
+            }
+        }
+        request.setAttribute("sosanpham", dem);
+        request.setAttribute("nameuser", nameuser);
         RequestDispatcher rd = request.getRequestDispatcher("Detail.jsp");
         rd.forward(request, response);
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
